@@ -1,11 +1,24 @@
-from classes import Player, Table
-from card_class import Card, values, symbols, deck_Of_Cards
+from classes import Player, CPU, Table
+from card_class import Card, Deck
+
+#Python 3x Python 3x
+
+
 table = Table()
+
 mainPlayer = Player()
-print(deck_Of_Cards)
-card1 = Card(1,"spade")
-mainPlayer.add_to_hand(card1.name)
-print(mainPlayer.hand)
-mycard = mainPlayer.play("A_spade", table)
-print(mainPlayer.hand)
-print(mycard)
+cpu = CPU(1)
+
+deck_Of_Cards = Deck()
+
+print(deck_Of_Cards.display_container())
+print("                                                                                                               ")
+
+table.startup(deck_Of_Cards, Player.player_list)
+print(deck_Of_Cards.display_container())
+print("                                                                                                               ")
+
+print(table.display_top())
+print("                                                                                                               ")
+print(mainPlayer.display_hand())
+print(cpu.display_hand())
