@@ -1,5 +1,6 @@
 import random
 
+
 class Card:
     symbols = {
         "spade": "♠",
@@ -29,8 +30,10 @@ class Card:
         self.symbol = symbol
         self.name = f"{Card.values[value]}_{symbol}"
         self.display_name = f"{Card.values[value]}{Card.symbols[symbol]}"
+    
     def __repr__(self):
         return f"{self.name}"
+
 
 class Deck:
     figures = ["spade", "clover", "heart", "diamond"]
@@ -41,11 +44,14 @@ class Deck:
                 self.playing_cards.append(Card(val,symb))
         random.shuffle(self.playing_cards)
     
+
     def get_playing_cards(self):
         return self.playing_cards
 
+
     def remove_last_playing_card(self):
         return self.playing_cards.pop()
+
 
     def display_playing_cards(self):
         p = []
