@@ -1,5 +1,3 @@
-import random
-
 
 class Card:
     symbols = {
@@ -9,7 +7,7 @@ class Card:
         "diamond": "♦"  
     }
 
-    values = {
+    values_to_ranks = {
         1: "A",
         2: "2",
         3: "3",
@@ -28,33 +26,31 @@ class Card:
     def __init__(self, value, symbol):
         self.value = value
         self.symbol = symbol
-        self.name = f"{Card.values[value]}_{symbol}"
-        self.display_name = f"{Card.values[value]}{Card.symbols[symbol]}"
+        self.name = f"{Card.values_to_ranks[value]}_{symbol}"
+        self.display_name = f"{Card.values_to_ranks[value]}{Card.symbols[symbol]}"
     
     def __repr__(self):
         return f"{self.name}"
+    def __eq__(self, other):
+        value1, value2 = self.__eval(other)
+        if value1 == value2:
+            return True
+        else:
+            return False
 
+    def __eval(self, other):
+        if isinstance(other,Card):
+            value1, value2 = self.value, other.value
+            if value1 == 1:
+                value1 = 14
+            if value2 == 1:
+                value2 = 14
+            return value1, value2
+        else:
+            value1, value2 = self.value, other
+            if value1 == 1:
+                value1 = 14
+            return value1, value2
 
-class Deck:
-    figures = ["spade", "clover", "heart", "diamond"]
-    def __init__(self):
-        self.playing_cards = []
-        for symb in Deck.figures:
-            for val in range(1, 14):
-                self.playing_cards.append(Card(val,symb))
-        random.shuffle(self.playing_cards)
-    
-
-    def get_playing_cards(self):
-        return self.playing_cards
-
-
-    def remove_last_playing_card(self):
-        return self.playing_cards.pop()
-
-
-    def display_playing_cards(self):
-        p = []
-        for card in self.playing_cards:
-            p.append(card.display_name)
-        return p
+if __name__ == "__main__":
+    pass
