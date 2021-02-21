@@ -28,12 +28,20 @@ class Card:
         self.symbol = symbol
         self.name = f"{Card.values_to_ranks[value]}_{symbol}"
         self.display_name = f"{Card.values_to_ranks[value]}{Card.symbols[symbol]}"
+        self.locked = False
     
     def __repr__(self):
         return f"{self.name}"
     def __eq__(self, other):
         value1, value2 = self.__eval(other)
         if value1 == value2:
+            return True
+        else:
+            return False
+            
+    def __ne__(self, other): 
+        value1, value2 = self.__eval(other)
+        if value1 != value2:
             return True
         else:
             return False
@@ -51,6 +59,12 @@ class Card:
             if value1 == 1:
                 value1 = 14
             return value1, value2
+
+    def switch_locked_state(self):
+        if self.locked == False:
+            self.locked = True
+        else:
+            self.locked = False
 
 if __name__ == "__main__":
     pass

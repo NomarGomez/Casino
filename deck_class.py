@@ -23,7 +23,7 @@ class Deck:
         output = []
         for card in self.container:
             output.append(card.display_name)
-        return output
+        return print("Deck\n", output, "\n")
 
 if __name__ == "__main__":
     pass

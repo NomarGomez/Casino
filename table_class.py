@@ -1,7 +1,8 @@
 
 class Table:
-    def __init__(self):
+    def __init__(self, deck):
         self.top = []
+        self.deck = deck
         self.round = 0
     
 
@@ -20,26 +21,23 @@ class Table:
         
     def remove_from_top(self,target):
         return self.top.pop(self.top.index(target))
-
-    def set_top(self,p):
-        self.top = p
     
     
     def display_top(self):
         output = []
         for card in self.top:
             output.append(card.display_name)
-        return output
+        return print("Table \n", output, "\n")
 
-    def deal(self, deck, player_list):
+    def deal(self, player_list):
         for _ in range(0,4):
             for player in player_list:
-                player.add_to_hand(deck.remove_last_card())
+                player.add_to_hand(self.deck.remove_last_card())
     
-    def startup(self, deck, player_list):
+    def startup(self, player_list):
         for _ in range(0,4):
-            self.add_to_top(deck.remove_last_card())
-        self.deal(deck, player_list)
+            self.add_to_top(self.deck.remove_last_card())
+        self.deal(player_list)
 
 if __name__ == "__main__":
     pass

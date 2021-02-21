@@ -1,3 +1,6 @@
+from build_class import Build
+from card_class import Card
+
 
 class Player:
     player_list = []
@@ -5,11 +8,14 @@ class Player:
     def __init__(self):
         self.hand = []
         self.offhand = []
+        self.owns = 0
         Player.player_list.append(self)
     
     def __repr__(self):
-        return "Main Player"
+        return "Main Player "
 
+    def add_to_owns(self, inter):
+        self.owns += inter
 
     def get_hand(self):
         return self.hand
@@ -35,13 +41,13 @@ class Player:
         output = []
         for card in self.hand:
             output.append(card.display_name)
-        return output
+        return print("Main-hand\n", output, "\n")
     
     def display_offhand(self):
         output = []
         for card in self.offhand:
             output.append(card.display_name)
-        return output
+        return print("Off-hand\n", output, "\n")
     
     def play(self,table):
         def input_to_key(Input, instance):
@@ -54,7 +60,7 @@ class Player:
                     print(f"Unable to find the card. Reason: \"{Input}\" is out of range, please follow the instructions and try again ")
                     self.play(table)
             except ValueError:
-                print(f"Unable to find the card, Reason: \"{key}\" isn't a whole number, please follow the instructions and try again ")
+                print(f"Unable to find the card, Reason: \"{Input}\" isn't a whole number, please follow the instructions and try again ")
                 self.play(table)
             pass
 
@@ -70,9 +76,22 @@ class Player:
         
         def drop():
             target = input("Select wich card do you want to drop ")
-            card = self.remove_from_hand(find_target(input_to_key(target, self.hand),self.hand))
-            table.add_to_top(card)
-            print("Success! ")
+            card_hand = find_target(input_to_key(target, self.hand),self.hand)
+            if self.owns == 0:
+                no_other_card = True
+                for obj in table.top:
+                    if isinstance(obj,Card) and card_hand == obj:
+                        no_other_card = False
+                        break
+                if no_other_card:
+                    card = self.remove_from_hand(card_hand)
+                    table.add_to_top(card)
+                else:
+                    print(f"Unable to drop \"{card_hand.display_name}\", Reason: \"{obj.display_name}\" it has the same value ")
+                    self.play(table)
+            else:
+                print(f"Unable to drop \"{card_hand.display_name}\", Reason: You already own a build and you need to capture it build before trail or droping a card ")
+                self.play(table)
             pass
 
         def capture():
@@ -81,25 +100,31 @@ class Player:
 
             card_hand = find_target(input_to_key(target_hand, self.hand), self.hand)
             targets_table = targets_table.split()
-            p = []
+            object_list = []
             targets_value = 0
             for index in range(len(targets_table)):
                 target = input_to_key(targets_table[index], table.top)
                 targets_table[index] = target
                 obj = find_target(target, table.top)
-                targets_value += obj.value
-                p.append(obj)
+                if isinstance(obj,Card):
+                    targets_value += obj.value
+                elif isinstance(obj,Build):
+                    if card_hand != obj: 
+                        pass
+                object_list.append(obj)
+
             if len(targets_table) == len(set(targets_table)):
                 if card_hand == targets_value:
                     self.add_to_offhand(self.remove_from_hand(card_hand))
-                    for target in p:
+                    for target in object_list:
                         self.add_to_offhand(table.remove_from_top(target))
                 else:
-                    print("The ")
+                    print("The value of the card in your hand isn't equal to the value of the targets in the table, please follow instructions and try again ")
                     self.play(table)
             else:
                 print("You selected two or more times the same object, please follow instructions and try again ")
                 self.play(table)
+
             pass
 
 
@@ -109,6 +134,7 @@ class Player:
         commands = {
             "help" : Help,
             "drop" : drop,
+            "trail": drop,
             "capture": capture,
             "build": build
         }
@@ -118,7 +144,7 @@ class Player:
         try:
             commands[action]()
         except KeyError:
-            print(f"'{action}' isn't a valid action, please type 'help' to see the actions available ")
+            print(f"\"{action}\" isn't a valid action, please type 'help' to see the actions available ")
             self.play(table)
 
 class CPU(Player):
