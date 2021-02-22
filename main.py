@@ -1,7 +1,7 @@
-from player_class import Player, CPU
-from table_class import Table
-from card_class import Card
-from deck_class import Deck
+#Loading modules
+
+from classes import Player, Deck, Table
+
 
 #Build in Python 3.8.5
 

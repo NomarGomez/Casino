@@ -1,5 +1,6 @@
 import random
-from card_class import Card
+
+from .card_class import Card
 
 class Deck:
     figures = ["spade", "clover", "heart", "diamond"]

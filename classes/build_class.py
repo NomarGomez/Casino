@@ -20,3 +20,6 @@ class Build(list):
         self.owner.add_to_owns(-1)
         del self
         pass
+
+if __name__ == "__main__":
+    pass

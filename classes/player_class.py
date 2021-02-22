@@ -1,5 +1,5 @@
-from build_class import Build
-from card_class import Card
+from classes.build_class import Build
+from classes.card_class import Card
 
 
 class Player:
@@ -47,7 +47,7 @@ class Player:
         output = []
         for card in self.offhand:
             output.append(card.display_name)
-        return print("Off-hand\n", output, "\n")
+        return print("\nOff-hand\n", output, "\n")
     
     def play(self,table):
         def input_to_key(Input, instance):
@@ -146,19 +146,6 @@ class Player:
         except KeyError:
             print(f"\"{action}\" isn't a valid action, please type 'help' to see the actions available ")
             self.play(table)
-
-class CPU(Player):
-
-    def __init__(self):
-        super().__init__()
-        self.name = f"CPU_{len(Player.player_list)}"
-    
-    def __repr__(self):
-        return f"CPU_{self.name}"
-    
-
-    def play(self, deck):
-        pass
 
 if __name__ == "__main__":
     pass
