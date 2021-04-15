@@ -1,6 +1,3 @@
-
-from .build_class import Build
-from .card_class import Card
 from .player_class import Player
 
 

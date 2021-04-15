@@ -9,18 +9,20 @@ if __name__ == "__main__":
     mainPlayer = Player()
     deck_Of_Cards = Deck()
 
-    table = Table(deck_Of_Cards)
-
-
-    deck_Of_Cards.display_container()
-
-    table.startup(Player.player_list)
+    table = Table(deck_Of_Cards, Player.player_list)
+    #Loop of a game
     while True:
-        table.display_top()
-        mainPlayer.display_hand()
-        mainPlayer.play(table)
+        #Loop of a batch
+        table.startup()
+        while True:
+            #Loop of a round (A player must play 4 times)
+            for _ in range(0,4):
+                #Players play 1 time
+                for player in table.player_list:
+                    table.display_top()
+                    mainPlayer.display_hand()
+                    mainPlayer.display_offhand()
 
-        mainPlayer.display_offhand()
-        
-        if len(mainPlayer.get_hand()) == 0:
-            table.deal(Player.player_list)
+                    player.play(table)
+
+            table.next_round()
