@@ -1,5 +1,3 @@
-from classes.card_class import Card
-
 
 class Player:
     player_list = []
@@ -13,30 +11,35 @@ class Player:
 
         Player.player_list.append(self)
     
+    #Changes how is represented (printed) the Player Object
     def __repr__(self):
         return "Main Player "
 
-
+    #Returns the hand of the player as an object
     def get_hand(self):
         return self.hand
     
+    #Returns the offhand of the player as an object
     def get_offhand(self):
         return self.offhand
     
-
+    #Adds a card to the player hand
     def add_to_hand(self,card):
         self.hand.append(card)
     
+    #Adds a card to the player offhand
     def add_to_offhand(self,card):
         self.offhand.append(card)
     
+    #Remvove a card from the player hands
     def remove_from_hand(self,card):
         return self.hand.pop(self.hand.index(card))
     
+    #Set an specific hand of the player (For testing porpuses only)
     def set_hand(self,cards):
         self.hand = cards
 
-    
+    #Displays the hand of the player
     def display_hand(self):
         cards_on_hand = []
         index_helper = []
@@ -45,13 +48,17 @@ class Player:
             cards_on_hand.append(card.display_name)
         return print("Hand \n", index_helper,"\n", cards_on_hand, "\n")
     
+    #Displays the offhand of the player
     def display_offhand(self):
         output = []
         for card in self.offhand:
             output.append(card.display_name)
         return print("\nOff-hand\n", output, "\n")
     
+    #Is used to player can play
     def play(self,table):
+
+        
         def input_to_key(Input, instance):
             try:
                 key = int(Input)
