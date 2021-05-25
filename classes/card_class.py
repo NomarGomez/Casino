@@ -31,6 +31,7 @@ class Card:
     
     def __repr__(self):
         return f"{self.name}"
+    
     def __eq__(self, other):
         value1, value2 = self.__eval(other)
         if value1 == value2:
@@ -57,6 +58,8 @@ class Card:
             value1, value2 = self.value, other
             if value1 == 1:
                 value1 = 14
+            if value2 == 1:
+                value2 = 14
             return value1, value2
 
 if __name__ == "__main__":

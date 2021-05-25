@@ -4,9 +4,8 @@ class Player:
 
     def __init__(self):
         self.hand = []
-        
         self.offhand = []
-
+        self.name = ""
         self.score = 0
 
         Player.player_list.append(self)
@@ -55,7 +54,6 @@ class Player:
             output.append(card.display_name)
         return print("\nOff-hand\n", output, "\n")
     
-    #Is used to player can play
     def play(self,table):
 
         

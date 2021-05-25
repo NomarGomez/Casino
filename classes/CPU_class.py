@@ -11,7 +11,7 @@ class CPU(Player):
         return f"CPU_{self.name}"
     
 
-    def play(self, deck):
+    def play(self, table):
         pass
 
 if __name__ == "__main__":
