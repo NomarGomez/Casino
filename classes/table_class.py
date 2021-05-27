@@ -5,7 +5,7 @@ class Table:
         self.top = []
         self.deck = ""
         self.player_list = player_list
-        self.round = 0
+        self.round = 1
     
     #Returns the top value
     def get_top(self):
@@ -22,10 +22,12 @@ class Table:
     
     #Adds one round to the table
     def add_to_round(self):
-        if self.deck != []:
+        if len(self.deck.container) == len(self.player_list) * 4:
+            self.round = "Last Round"
+        elif self.deck.container == []:
+            self.round = "Stop"
+        else:
             self.round += 1
-        elif self.deck == []:
-            self.round = "Last round"
         pass
     
     #Remove the target card from the top of the table
@@ -37,12 +39,16 @@ class Table:
         cards_on_top = []
         index_helper = []
         for card in self.top:
-            index_helper.append(str(len(cards_on_top)) + " ")
+            h = str(len(cards_on_top))
+            i = len(card.display_name) - len(h)
+            if i != 0:
+                h = h + (" " * i)
+            index_helper.append(h)
             cards_on_top.append(card.display_name)
         return print("Table \n", index_helper,"\n", cards_on_top, "\n")
 
     def display_round(self):
-        return print("Round \n", self.round ,"\n")
+        return print("Round: " + str(self.round) + "\n")
 
     #Deal the cards to the players
     def deal(self):
@@ -60,11 +66,10 @@ class Table:
     
     #Used for passing to the next round
     def next_round(self):
-        if self.round != "Last round":
-            self.deal()
+        if self.round is not "Last round":
             self.add_to_round()
-        else:
-            self.round = "Stop"
+            if self.round is not "Stop":
+                self.deal()
 
 
 
@@ -125,7 +130,7 @@ class Table:
         #Clears the top
         self.top.clear()
 
-        self.round = 0
+        self.round = 1
         pass
 
 if __name__ == "__main__":

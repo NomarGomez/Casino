@@ -43,7 +43,11 @@ class Player:
         cards_on_hand = []
         index_helper = []
         for card in self.hand:
-            index_helper.append(str(len(cards_on_hand)) + " ")
+            h = str(len(cards_on_hand))
+            i = len(card.display_name) - len(h)
+            if i != 0:
+                h = h + (" " * i)
+            index_helper.append(h)
             cards_on_hand.append(card.display_name)
         return print("Hand \n", index_helper,"\n", cards_on_hand, "\n")
     
@@ -71,8 +75,11 @@ class Player:
                 return self.play(table)
 
         def find_target(key, instance):
-            target = instance[key]
-            return target
+            try:
+                target = instance[key]
+                return target
+            except:
+                return self.play(table)
 
         #It have upper "H" because there is a built-in "help".
         def Help():

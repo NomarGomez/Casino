@@ -1,13 +1,15 @@
 #Loading modules
 
-from classes import Player, Deck, Table
+from classes import Player, CPU, Deck, Table
 
 
 #Build in Python 3.9.2
 
 if __name__ == "__main__":
-    mainPlayer = Player()
-
+    #mainPlayer = Player()
+    C1 = CPU()
+    C2 = CPU()
+    C3 = CPU()
     table = Table(Player.player_list)
     #Loop of a game
     while True:
@@ -20,8 +22,8 @@ if __name__ == "__main__":
                 for player in table.player_list:
                     table.display_round()
                     table.display_top()
-                    mainPlayer.display_hand()
-                    mainPlayer.display_offhand()
+                    #mainPlayer.display_hand()
+                    #mainPlayer.display_offhand()
 
                     player.play(table)
             table.next_round()
