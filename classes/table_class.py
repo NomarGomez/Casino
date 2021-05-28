@@ -80,23 +80,25 @@ class Table:
 
         #Creates the entry on the dictionary
         for player in self.player_list:
-            players[player.name] = {
-            "Obj": player,
+            players[player] = {
             "Cards": len(player.offhand),
             "Spades": 0
             }
         
         #Modifies the entry on the dictionary / Give the player score for the A's, 2♠ and 10♦
         for player in players:
-            for card in player["Obj"].offhand:
+            for card in player.offhand:
                 if card.value == 1:
-                    player["Obj"].score += 1
+                    player.score += 1
+                    print(f"{player}Scored a point. Reason:{card.display_name}")
                 if card.symbol == "spade":
                     if card.value == 2:
-                        player["Obj"].score += 1
-                    player["Spades"] += 1
+                        player.score += 1
+                        print(f"{player}Scored a point. Reason:{card.display_name}")
+                    players[player]["Spades"] += 1
                 if card.symbol == "diamond" and card.value == 10:
-                    player["Obj"].score += 2
+                    player.score += 2
+                    print(f"{player}Scored two points. Reason:{card.display_name}")
         
         #Finishes the give the score to the player
         most_Cards = [0,""]
@@ -106,27 +108,28 @@ class Table:
         most_Spades2 = 0
 
         for player in players:
-            if player["Cards"] > most_Cards[0]:
-                most_Cards[0], most_Cards[1] = player["Cards"], player["Obj"]
-            elif player["Cards"] == most_Cards[0]:
-                most_Cards2 = player["Cards"]
+            if players[player]["Cards"] > most_Cards[0]:
+                most_Cards[0], most_Cards[1] = players[player]["Cards"], player
+            elif players[player]["Cards"] == most_Cards[0]:
+                most_Cards2 = players[player]["Cards"]
 
 
-            if player["Spades"] > most_Spades[0]:
-                most_Spades[0], most_Spades[1] = player["Spades"], player["Obj"]
-            elif player["Spades"] == most_Spades[0]:
-                most_Spades2 = player["Spades"]
+            if players[player]["Spades"] > most_Spades[0]:
+                most_Spades[0], most_Spades[1] = players[player]["Spades"], player
+            elif players[player]["Spades"] == most_Spades[0]:
+                most_Spades2 = players[player]["Spades"]
 
             #Clears the offhand of the player
-            player["Obj"].offhand.clear()
-            pass
+            print(player.name, player.score)
+            player.offhand.clear()
 
         if most_Cards[0] != most_Cards2:
             most_Cards[1].score += 3
+            print(f"{player}Scored three points. Reason: Owns most cards")
         
         if most_Spades[0] != most_Spades2:
             most_Spades[1].score += 1
-
+            print(f"{player}Scored a point. Reason: Owns most spades")
         #Clears the top
         self.top.clear()
 

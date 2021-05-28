@@ -29,3 +29,4 @@ if __name__ == "__main__":
             table.next_round()
         
         table.next_batch()
+        input()

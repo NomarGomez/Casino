@@ -5,14 +5,14 @@ class Player:
     def __init__(self):
         self.hand = []
         self.offhand = []
-        self.name = ""
+        self.name = "Main Player"
         self.score = 0
 
         Player.player_list.append(self)
     
     #Changes how is represented (printed) the Player Object
     def __repr__(self):
-        return "Main Player "
+        return self.name
 
     #Returns the hand of the player as an object
     def get_hand(self):
