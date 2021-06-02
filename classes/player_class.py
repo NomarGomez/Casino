@@ -91,20 +91,19 @@ class Player:
             card_hand = find_target(input_to_key(target, self.hand),self.hand)
             for card_top in table.top:
                 if card_hand == card_top:
-                    print(f"Unable to drop \"{card_hand.display_name}\", Reason: \"{card_top.display_name}\" have the same value ")
+                    print(f"Unable to drop \"{card_hand.display_name} ({self.hand.index(card_hand)})\", Reason: \"{card_top.display_name} ({table.top.index(card_top)}) \" have the same value")
                     return self.play(table)
             table.add_to_top(self.remove_from_hand(card_hand))
             pass
 
         def capture():
             target_hand = input("Select wich card on your hand do you want to use \n")
-            targets_table = input("Select wich card, cards or build do you want to capture \n")
+            targets_table = input("Select wich card, cards or build do you want to capture \n").split()
 
             #Makes sure that the player didn't set two times the same card
             if len(targets_table) == len(set(targets_table)):
 
                 card_hand = find_target(input_to_key(target_hand, self.hand), self.hand)
-                targets_table = targets_table.split()
                 cards_list = []
                 targets_value = 0
                 for index in range(len(targets_table)):

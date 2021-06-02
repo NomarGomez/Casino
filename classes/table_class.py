@@ -1,4 +1,5 @@
 from .deck_class import Deck
+import random
 
 class Table:
     def __init__(self, player_list):
@@ -6,6 +7,9 @@ class Table:
         self.deck = ""
         self.player_list = player_list
         self.round = 1
+        self.scoreboard = "Players doesn't have score yet"
+        self.game_state = True
+        self.winner = ""
     
     #Returns the top value
     def get_top(self):
@@ -33,6 +37,12 @@ class Table:
     #Remove the target card from the top of the table
     def remove_from_top(self,target):
         return self.top.pop(self.top.index(target))
+
+    #Updates the scores
+    def update_scoreboard(self):
+        self.scoreboard = {}
+        for player in self.player_list:
+            self.scoreboard[player] = player.score
     
     #Used for displaying the cards at the top of the table.
     def display_top(self):
@@ -47,8 +57,13 @@ class Table:
             cards_on_top.append(card.display_name)
         return print("Table \n", index_helper,"\n", cards_on_top, "\n")
 
+    #Display the current round
     def display_round(self):
         return print("Round: " + str(self.round) + "\n")
+
+    #Displays the scoreboard
+    def display_scoreboard(self):
+        return print("Scoreboard: \n", self.scoreboard, "\n")
 
     #Deal the cards to the players
     def deal(self):
@@ -66,9 +81,9 @@ class Table:
     
     #Used for passing to the next round
     def next_round(self):
-        if self.round is not "Last round":
+        if self.round != "Last round":
             self.add_to_round()
-            if self.round is not "Stop":
+            if self.round != "Stop":
                 self.deal()
 
 
@@ -90,15 +105,15 @@ class Table:
             for card in player.offhand:
                 if card.value == 1:
                     player.score += 1
-                    print(f"{player}Scored a point. Reason:{card.display_name}")
+                    print(f"{player} Scored a point. Reason: {card.display_name}")
                 if card.symbol == "spade":
                     if card.value == 2:
                         player.score += 1
-                        print(f"{player}Scored a point. Reason:{card.display_name}")
+                        print(f"{player} Scored a point. Reason: {card.display_name}")
                     players[player]["Spades"] += 1
                 if card.symbol == "diamond" and card.value == 10:
                     player.score += 2
-                    print(f"{player}Scored two points. Reason:{card.display_name}")
+                    print(f"{player} Scored two points. Reason: {card.display_name}")
         
         #Finishes the give the score to the player
         most_Cards = [0,""]
@@ -120,20 +135,29 @@ class Table:
                 most_Spades2 = players[player]["Spades"]
 
             #Clears the offhand of the player
-            print(player.name, player.score)
             player.offhand.clear()
 
         if most_Cards[0] != most_Cards2:
             most_Cards[1].score += 3
-            print(f"{player}Scored three points. Reason: Owns most cards")
+            print(f"{player} Scored three points. Reason: Owns most cards")
+        else:
+            print("Noobody gets points for owning most cards")
         
         if most_Spades[0] != most_Spades2:
             most_Spades[1].score += 1
-            print(f"{player}Scored a point. Reason: Owns most spades")
-        #Clears the top
-        self.top.clear()
+            print(f"{player} Scored a point. Reason: Owns most spades")
+        else:
+            print("Noobody gets points for owning most spades")
 
+        #Clears the table
+        self.top.clear()
         self.round = 1
+
+        #Updates the scoreboard
+        self.update_scoreboard()
+
+        #Shuffles the list of players so players play in differents turns
+        #self.player_list = random.shuffle(self.player_list)
         pass
 
 if __name__ == "__main__":

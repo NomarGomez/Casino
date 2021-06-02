@@ -1,9 +1,9 @@
 #Loading modules
 
-from classes import Player, CPU, Deck, Table
+from classes import Player, CPU, Table
 
 
-#Build in Python 3.9.2
+#Build in Python 3.9.5
 
 if __name__ == "__main__":
     #mainPlayer = Player()
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     C3 = CPU()
     table = Table(Player.player_list)
     #Loop of a game
-    while True:
+    while table.game_state:
         #Loop of a batch
         table.startup()
         while table.round != "Stop":
@@ -20,6 +20,7 @@ if __name__ == "__main__":
             for _ in range(0,4):
                 #Players play one at time
                 for player in table.player_list:
+                    table.display_scoreboard()
                     table.display_round()
                     table.display_top()
                     #mainPlayer.display_hand()
@@ -29,4 +30,3 @@ if __name__ == "__main__":
             table.next_round()
         
         table.next_batch()
-        input()
