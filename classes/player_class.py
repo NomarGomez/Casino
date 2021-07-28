@@ -1,12 +1,19 @@
+import sys
+
+#Relative import
+sys.path.append("..")
+from src.lenguages import lenguages
 
 class Player:
     player_list = []
-
-    def __init__(self):
+    gamemode = ""
+    leng = ""
+    def __init__(self,name):
         self.hand = []
         self.offhand = []
-        self.name = "Main Player"
+        self.name = name
         self.score = 0
+        self.flip_state = True
 
         Player.player_list.append(self)
     
@@ -49,18 +56,47 @@ class Player:
                 h = h + (" " * i)
             index_helper.append(h)
             cards_on_hand.append(card.display_name)
-        return print("Hand \n", index_helper,"\n", cards_on_hand, "\n")
+        return print(lenguages[Player.leng]["player_class"]["displayhand"] + str(index_helper) + "\n" + str(cards_on_hand) + "\n")
+    
+    def display_handflipped(self):
+        cards_on_hand = []
+        for card in self.hand:
+            cards_on_hand.append("🂠")
+        return print(lenguages[Player.leng]["player_class"]["displayhand"] + str(cards_on_hand))
     
     #Displays the offhand of the player
     def display_offhand(self):
         output = []
         for card in self.offhand:
             output.append(card.display_name)
-        return print("\nOff-hand\n", output, "\n")
+        return print(lenguages[Player.leng]["player_class"]["displayoffhand"] + str(output) + "\n")
     
+    def display(self):
+        if Player.gamemode == "Singleplayer":
+            self.display_hand()
+            print(lenguages[Player.leng]["player_class"]["display"] + str(len(self.offhand)) + "\n")
+            return
+        else:
+            if self.flip_state:
+                self.display_handflipped()
+                print( "\n" + lenguages[Player.leng]["player_class"]["display"] + str(len(self.offhand)) + "\n")
+                return
+            else:
+                self.display_hand()
+                print( "\n" + lenguages[Player.leng]["player_class"]["display"] + str(len(self.offhand)) + "\n")
+                return
+        pass
+
     def play(self,table):
 
-        
+        def flip():
+            if self.flip_state:
+                self.flip_state = False
+                self.display()
+            else:
+                self.flip_state = True
+            return self.play(table)
+
         def input_to_key(Input, instance):
             try:
                 key = int(Input)
@@ -68,10 +104,10 @@ class Player:
                     instance[key]
                     return key
                 except IndexError:
-                    print(f"Unable to find the card. Reason: \"{Input}\" is out of range, please follow the instructions and try again ")
+                    print(lenguages[Player.leng]["player_class"]["inputokeye"] +  f" \"{Input}\" " + lenguages[Player.leng]["player_class"]["inputtokeye1"])
                     return self.play(table)
             except ValueError:
-                print(f"Unable to find the card, Reason: \"{Input}\" isn't a whole number, please follow the instructions and try again ")
+                print(lenguages[Player.leng]["player_class"]["inputokeye"] +  f" \"{Input}\" " + lenguages[Player.leng]["player_class"]["inputtokeye2"])
                 return self.play(table)
 
         def find_target(key, instance):
@@ -83,22 +119,22 @@ class Player:
 
         #It have upper "H" because there is a built-in "help".
         def Help():
-            print("How-to-play ")
+            print(lenguages[Player.leng]["player_class"]["help"])
             return self.play(table)
         
         def drop():
-            target = input("Select wich card do you want to drop \n")
+            target = input(lenguages[Player.leng]["player_class"]["dropinput"])
             card_hand = find_target(input_to_key(target, self.hand),self.hand)
             for card_top in table.top:
                 if card_hand == card_top:
-                    print(f"Unable to drop \"{card_hand.display_name} ({self.hand.index(card_hand)})\", Reason: \"{card_top.display_name} ({table.top.index(card_top)}) \" have the same value")
+                    print(lenguages[Player.leng]["player_class"]["droperror"][0] + f" \"{card_hand.display_name} ({self.hand.index(card_hand)})\" " + lenguages[Player.leng]["player_class"]["droperror"][1] + f" \"{card_top.display_name} ({table.top.index(card_top)}) \"" + lenguages[Player.leng]["player_class"]["droperror"][2])
                     return self.play(table)
             table.add_to_top(self.remove_from_hand(card_hand))
             pass
 
         def capture():
-            target_hand = input("Select wich card on your hand do you want to use \n")
-            targets_table = input("Select wich card, cards or build do you want to capture \n").split()
+            target_hand = input(lenguages[Player.leng]["player_class"]["captureinput1"])
+            targets_table = input().split(lenguages[Player.leng]["player_class"]["captureinput2"])
 
             #Makes sure that the player didn't set two times the same card
             if len(targets_table) == len(set(targets_table)):
@@ -118,27 +154,36 @@ class Player:
                     for target in cards_list:
                         self.add_to_offhand(table.remove_from_top(target))
                 else:
-                    print("The value of the card in your hand isn't equal to the value of the targets in the table, please follow instructions and try again ")
+                    print(lenguages[Player.leng]["player_class"]["captureerror1"])
                     return self.play(table)
             else:
-                print("You selected two or more times the same card, please follow instructions and try again ")
+                print(lenguages[Player.leng]["player_class"]["captureerror2"])
                 return self.play(table)
             pass
 
-        commands = {
-            "help" : Help,
-            "drop" : drop,
-            "trail": drop,
-            "capture": capture,
-        }
-
-        action = (input("Select an action (help, drop, trail or capture):  \n")).lower()
-
+        if Player.gamemode == "Singleplayer":
+            commands = {
+            lenguages[Player.leng]["player_class"]["commands"][0] : Help,
+            lenguages[Player.leng]["player_class"]["commands"][1] : drop,
+            lenguages[Player.leng]["player_class"]["commands"][2]: drop,
+            lenguages[Player.leng]["player_class"]["commands"][3]: capture,
+            }
+        else:
+            commands = {
+            lenguages[Player.leng]["player_class"]["commands"][0] : Help,
+            lenguages[Player.leng]["player_class"]["commands"][1] : drop,
+            lenguages[Player.leng]["player_class"]["commands"][2]: drop,
+            lenguages[Player.leng]["player_class"]["commands"][3]: capture,
+            lenguages[Player.leng]["player_class"]["commands"][4]: flip,
+            }
+        
+        action = input(self.name + lenguages[Player.leng]["player_class"]["action"]).lower()
         try:
             commands[action]()
         except KeyError:
-            print(f"\"{action}\" isn't a valid action, please type 'help' to see the actions available ")
+            print(action  + lenguages[Player.leng]["player_class"]["actionerror"])
             return self.play(table)
+        self.flip_state = True
 
 if __name__ == "__main__":
     pass

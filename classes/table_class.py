@@ -1,13 +1,21 @@
-from .deck_class import Deck
+import sys
 import random
 
+from .deck_class import Deck
+
+sys.path.append("..")
+from src import lenguages
+from functions import clearDisplay
+
+
 class Table:
+    leng = ""
     def __init__(self, player_list):
         self.top = []
         self.deck = ""
         self.player_list = player_list
         self.round = 1
-        self.scoreboard = "Players doesn't have score yet"
+        self.scoreboard = lenguages[Table.leng]["table_class"]["blankscoreboard"]
         self.game_state = True
         self.winner = ""
     
@@ -41,29 +49,45 @@ class Table:
     #Updates the scores
     def update_scoreboard(self):
         self.scoreboard = {}
+        winners = []
         for player in self.player_list:
+            if player.score >= 21:
+                if winners == []:
+                    winners.append(player)
+                elif player.score > winners[0].score:
+                    winners.clear()
+                    winners.append(player)
+                elif player.score == winners[0].score:
+                    winners.append(player)
+
             self.scoreboard[player] = player.score
+        if len(winners) == 1:
+            self.winner = winners[0]
+            self.game_state = False #This player won the game
+        pass
+
     
     #Used for displaying the cards at the top of the table.
     def display_top(self):
         cards_on_top = []
         index_helper = []
         for card in self.top:
+            #This is used to give blank spaces to the index helper so the two lists has the same lenght and looks prettier on the terminal
             h = str(len(cards_on_top))
             i = len(card.display_name) - len(h)
             if i != 0:
                 h = h + (" " * i)
             index_helper.append(h)
             cards_on_top.append(card.display_name)
-        return print("Table \n", index_helper,"\n", cards_on_top, "\n")
+        return print(lenguages[Table.leng]["table_class"]["table"] + str(index_helper) + "\n" + str(cards_on_top) + "\n")
 
     #Display the current round
     def display_round(self):
-        return print("Round: " + str(self.round) + "\n")
+        return print(lenguages[Table.leng]["table_class"]["round"] + str(self.round) + "\n")
 
     #Displays the scoreboard
     def display_scoreboard(self):
-        return print("Scoreboard: \n", self.scoreboard, "\n")
+        return print(lenguages[Table.leng]["table_class"]["scoreboard"] + str(self.scoreboard) +  "\n")
 
     #Deal the cards to the players
     def deal(self):
@@ -93,6 +117,10 @@ class Table:
         #Creates the dictionary
         players = {}
 
+        input(lenguages[Table.leng]["table_class"]["nextbatch"][0])
+        print(lenguages[Table.leng]["table_class"]["nextbatch"][1])
+        clearDisplay()
+
         #Creates the entry on the dictionary
         for player in self.player_list:
             players[player] = {
@@ -105,15 +133,15 @@ class Table:
             for card in player.offhand:
                 if card.value == 1:
                     player.score += 1
-                    print(f"{player} Scored a point. Reason: {card.display_name}")
+                    print(str(player) + lenguages[Table.leng]["table_class"]["score"][0] + card.display_name)
                 if card.symbol == "spade":
                     if card.value == 2:
                         player.score += 1
-                        print(f"{player} Scored a point. Reason: {card.display_name}")
+                        print(str(player) + lenguages[Table.leng]["table_class"]["score"][0] + card.display_name)
                     players[player]["Spades"] += 1
                 if card.symbol == "diamond" and card.value == 10:
                     player.score += 2
-                    print(f"{player} Scored two points. Reason: {card.display_name}")
+                    print(str(player) + lenguages[Table.leng]["table_class"]["score"][1] + card.display_name)
         
         #Finishes the give the score to the player
         most_Cards = [0,""]
@@ -139,26 +167,35 @@ class Table:
 
         if most_Cards[0] != most_Cards2:
             most_Cards[1].score += 3
-            print(f"{player} Scored three points. Reason: Owns most cards")
+            print(str(player) + lenguages[Table.leng]["table_class"]["score"][2])
         else:
-            print("Noobody gets points for owning most cards")
+            print(lenguages[Table.leng]["table_class"]["score"][3])
         
         if most_Spades[0] != most_Spades2:
             most_Spades[1].score += 1
-            print(f"{player} Scored a point. Reason: Owns most spades")
+            print(str(player) + lenguages[Table.leng]["table_class"]["score"][4])
         else:
-            print("Noobody gets points for owning most spades")
+            print(lenguages[Table.leng]["table_class"]["score"][5])
 
+        input(lenguages[Table.leng]["table_class"]["score"][6])
         #Clears the table
         self.top.clear()
         self.round = 1
 
+        #Shuffles the list of players so players play in differents turns
+        random.shuffle(self.player_list)
+
         #Updates the scoreboard
         self.update_scoreboard()
 
-        #Shuffles the list of players so players play in differents turns
-        #self.player_list = random.shuffle(self.player_list)
         pass
+    def game_over(self):
+        clearDisplay()
+        input(lenguages[Table.leng]["table_class"]["gameover"][0])
+
+        print(lenguages[Table.leng]["table_class"]["gameover"][1] + self.winner)
+        print(lenguages[Table.leng]["table_class"]["gameover"][2] + self.scoreboard)
+        print(lenguages[Table.leng]["table_class"]["gameover"][3])
 
 if __name__ == "__main__":
     pass

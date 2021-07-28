@@ -1,16 +1,15 @@
 #Loading modules
 
-from classes import Player, CPU, Table
+from classes import Player, CPU, Table, Menu
 
+from functions import clearDisplay
 
-#Build in Python 3.9.5
+Menu()
 
+#Build in Python 3.9x
 if __name__ == "__main__":
-    #mainPlayer = Player()
-    C1 = CPU()
-    C2 = CPU()
-    C3 = CPU()
     table = Table(Player.player_list)
+    lastest_player = "" #Lastest player that play
     #Loop of a game
     while table.game_state:
         #Loop of a batch
@@ -20,13 +19,15 @@ if __name__ == "__main__":
             for _ in range(0,4):
                 #Players play one at time
                 for player in table.player_list:
+                    if isinstance(player,Player):
+                        lastest_player = player
+                    clearDisplay()
                     table.display_scoreboard()
                     table.display_round()
                     table.display_top()
-                    #mainPlayer.display_hand()
-                    #mainPlayer.display_offhand()
+                    lastest_player.display()
 
                     player.play(table)
-            table.next_round()
-        
+            table.next_round()        
         table.next_batch()
+    table.game_over()
